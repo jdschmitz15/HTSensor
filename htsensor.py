@@ -27,6 +27,7 @@ LOGFILE = "logfile"
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename=LOGFILE)
     logger = logging.getLogger("HTSensor")
     logging.config.fileConfig("log_config")
 
