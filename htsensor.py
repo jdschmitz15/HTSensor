@@ -38,7 +38,7 @@ if __name__ == "__main__":
     #call the DHT22 device hanging off the PIN configured
     try:
 #        humidity, temp = Adafruit_DHT.read_retry(SENSOR, PIN)
-        logger.debug("Accessing DHT22 temp = %f and humidity = %f" % temp, humidity)
+        logger.debug("Accessing DHT22 temp = %d and humidity = %d" % temp, humidity)
     except IOError as e:
         logging.info("ouch")
     jsondata = json.dumps({'deviceid':DEVICEID,'temp':temp, 'humidity':humidity})
