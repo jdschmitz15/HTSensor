@@ -10,8 +10,8 @@ and makes a call to a restful API.  Passes the device id(which I make up),
 temp and humidity.  The date should also have the index and date added.
 
 '''
-import Adafruit_DHT
-
+#import Adafruit_DHT
+import os
 import logging
 import logging.config
 
@@ -21,12 +21,15 @@ BASE_HTAPI_URL = "http://192.168.1.221:8000/htdata/"
 HEADER = {'content-type': 'application/json'}
 DEVICEID = 1
 PIN=12
-SENSOR=Adafruit_DHT.DHT22
+SENSOR='Adafruit_DHT.DHT22'
 LOGFILE = "logfile"
-
+temp = 0
+humidity = 0
+DIR = '/home/pi/HTSensor'
 
 
 if __name__ == "__main__":
+    os.chdir(DIR)
     logging.basicConfig(filename=LOGFILE)
     logger = logging.getLogger("HTSensor")
     logging.config.fileConfig("log_config")
@@ -34,8 +37,8 @@ if __name__ == "__main__":
 
     #call the DHT22 device hanging off the PIN configured
     try:
-        humidity, temp = Adafruit_DHT.read_retry(SENSOR, PIN)
-        logger.info("Accessing DHT22 temp = %d and humidity = %d", temp, humidity)
+#        humidity, temp = Adafruit_DHT.read_retry(SENSOR, PIN)
+        logger.debug("Accessing DHT22 temp = %f and humidity = %f" % temp, humidity)
     except IOError as e:
         logging.info("ouch")
     jsondata = json.dumps({'deviceid':DEVICEID,'temp':temp, 'humidity':humidity})
