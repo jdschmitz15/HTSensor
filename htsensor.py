@@ -11,9 +11,7 @@ temp and humidity.  The date should also have the index and date added.
 
 '''
 #import Adafruit_DHT
-import os
 import logging
-import logging.config
 
 import requests, json
 
@@ -25,24 +23,29 @@ SENSOR='Adafruit_DHT.DHT22'
 LOGFILE = "logfile"
 temp = 0
 humidity = 0
-DIR = '/home/pi/HTSensor'
+#DIR = '/home/pi/HTSensor/'
+LEVEL=logging.INFO
+FORMAT = '%(asctime)s:%(levelname)s:%(message)s'
 
 
 if __name__ == "__main__":
-    os.chdir(DIR)
-    logging.basicConfig(filename=LOGFILE)
-    logger = logging.getLogger("HTSensor")
-    logging.config.fileConfig("log_config")
+    logging.basicConfig(filename=LOGFILE,level=LEVEL,format=FORMAT)
+
 
 
     #call the DHT22 device hanging off the PIN configured
     try:
-#        humidity, temp = Adafruit_DHT.read_retry(SENSOR, PIN)
-        logger.debug("Accessing DHT22 temp = %d and humidity = %d" % temp, humidity)
+ #       humidity, temp = Adafruit_DHT.read_retry(SENSOR, PIN)
+        logging.info("Accessing DHT22 temp = %d and humidity = %d" , temp, humidity)
+
     except IOError as e:
-        logging.info("ouch")
+        logging.warn("%s : Not working ????", e)
     jsondata = json.dumps({'deviceid':DEVICEID,'temp':temp, 'humidity':humidity})
-    r = requests.post(BASE_HTAPI_URL, data=jsondata, headers=HEADER)
+    try:
+        r = requests.post(BASE_HTAPI_URL, data=jsondata, headers=HEADER)
+        logging.info("Sending data to API: t=%.5f and h=%.5f" , temp, humidity)
+    except SyntaxError as r_e:
+        logging.warn("%s : Request not working ????", r_e)
 
 
 
